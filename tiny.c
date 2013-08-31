@@ -24,6 +24,10 @@ int main(int argc, char **argv)
     listenfd = Open_listenfd(port);
     while (1) {
         clientlen = sizeof(clientaddr);
+
+        printf("INFO: JARVIS is listening on port %d...\n", port);
+        fflush(stdout);
+
         connfd = Accept(listenfd, (SA *)&clientaddr, &clientlen);
         doit(connfd);
         Close(connfd);
@@ -31,6 +35,8 @@ int main(int argc, char **argv)
 }
 /* $end tinymain */
 
+/* Returns NULL, routes bytes in args->fromfd to args->tofd.
+ */
 void *route_to(void *args) {
     pthread_detach(pthread_self());
 
@@ -97,10 +103,12 @@ void doit(int clientfd)
     route clientToFICS = {clientfd, serverfd};
     route FICSToClient = {serverfd, clientfd};
 
+    // fromFICSId thread routes traffic from FICS to Client.
+    // fromClientId thread routes traffic from Client to FICS.
     pthread_create(&fromFICSId, NULL, route_to, &FICSToClient);
     pthread_create(&fromClientId, NULL, route_to, &clientToFICS);
 
-    pthread_join(fromFICSId, NULL);
+//    pthread_join(fromFICSId, NULL);
     pthread_join(fromClientId, NULL);
 
     Close(serverfd);
