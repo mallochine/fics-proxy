@@ -111,6 +111,9 @@ void doit(int clientfd)
 //    pthread_join(fromFICSId, NULL);
     pthread_join(fromClientId, NULL);
 
+    pthread_detach(fromClientId);
+    pthread_detach(fromFICSId);
+
     Close(serverfd);
 
     printf("INFO: exiting doit\n");
