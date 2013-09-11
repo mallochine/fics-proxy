@@ -14,6 +14,7 @@ void unix_error(char *msg) /* unix-style error */
 
 void thread_unix_error(char *msg) {
     fprintf(stderr, "%s: %s\n", msg, strerror(errno));
+    puts("INFO: thread exited");
     pthread_exit(NULL);
 }
 
