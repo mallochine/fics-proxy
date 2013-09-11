@@ -21,6 +21,9 @@ int main(int argc, char **argv)
     }
     port = atoi(argv[1]);
 
+    puts("INFO: setting SIGPIPE to SIG_IGN");
+    signal(SIGPIPE, SIG_IGN);
+
     listenfd = Open_listenfd(port);
     while (1) {
         clientlen = sizeof(clientaddr);
@@ -108,7 +111,7 @@ void doit(int clientfd)
     pthread_create(&fromFICSId, NULL, route_to, &FICSToClient);
     pthread_create(&fromClientId, NULL, route_to, &clientToFICS);
 
-//    pthread_join(fromFICSId, NULL);
+    pthread_join(fromFICSId, NULL);
     pthread_join(fromClientId, NULL);
 
     pthread_detach(fromClientId);
