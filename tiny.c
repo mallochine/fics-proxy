@@ -111,7 +111,7 @@ void doit(int clientfd)
     pthread_create(&fromFICSId, NULL, route_to, &FICSToClient);
     pthread_create(&fromClientId, NULL, route_to, &clientToFICS);
 
-    pthread_join(fromFICSId, NULL);
+//    pthread_join(fromFICSId, NULL);
     pthread_join(fromClientId, NULL);
 
     pthread_detach(fromClientId);
