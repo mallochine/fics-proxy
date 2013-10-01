@@ -62,6 +62,65 @@ void *route_to(void *args) {
     return NULL;
 }
 
+void *routeClientToFICS(void *args) {
+    pthread_detach(pthread_self());
+
+    route *R = (route *) args;
+    printf("INFO: route_to was called\n");
+    printf("INFO: fromfd is %d\n", R->fromfd);
+    printf("INFO: tofd is %d\n", R->tofd);
+    fflush(stdout);
+
+    // Put the client bytes into the logs
+//    FILE *client_logs;
+//    client_logs = fopen("./logs.txt","wb");
+
+    char buf[MAXLINE];
+    int numread;
+    while ((numread = recv(R->fromfd, buf, 1, 0)) > 0) {
+        // To turn on DEBUG mode, uncomment the following line
+        //putchar(buf[0]);
+        Rio_writen(R->tofd, buf, numread);
+//        fputc(buf[0], client_logs);
+    }
+
+//    fclose(client_logs);
+
+    printf("INFO: exiting route_to...\n");
+
+    return NULL;
+}
+
+void authenticateClient(int clientfd, int serverfd) {
+    char buf[2];
+    int numread;
+
+    puts("INFO: Flushing out the initial key that the client sends...");
+    while ((numread = recv(clientfd, buf, 1, 0)) > 0) {
+        // Simply printing out what the client sent, nothing else.
+        //putchar(buf[0]);
+
+        // The end of the message is with byte '\x80', so break the wihle loop
+        // when we get End Of Message
+        if (buf[0] == '\x0a')
+            break;
+    }
+
+    FILE *login_key;
+
+    puts("INFO: Giving login_key.txt to FICS...");
+    login_key = fopen("../keys/login_key.txt", "r");
+    if (login_key) {
+        while ((buf[0] = fgetc(login_key)) != EOF) {
+            write(serverfd, buf, 1);
+            //putchar(buf[0]);
+        }
+        fclose(login_key);
+    }
+
+    puts("INFO: Finished authenticating with FICS!");
+}
+
 void doit(int clientfd) 
 {
     //
@@ -70,7 +129,7 @@ void doit(int clientfd)
     char buf[MAXLINE];
     rio_t client_rio;
 
-    printf("INFO: Preparing JARVIS to receive from the client\n");
+    puts("INFO: Preparing JARVIS to receive from the client");
     Rio_readinitb(&client_rio, clientfd);
 
     //
@@ -79,18 +138,21 @@ void doit(int clientfd)
     int serverfd = 0;
     rio_t server_rio;
 
-    printf("INFO: Preparing JARVIS to receive from FICS\n");
+    puts("INFO: Preparing JARVIS to receive from FICS");
     Rio_readinitb(&server_rio, serverfd);
 
-    printf("INFO: Opening connection to FICS...\n");
+    puts("INFO: Opening connection to FICS...");
     serverfd = open_clientfd("freechess.org", 5000);
 
     if (serverfd < 0) {
-        printf("ERROR: Couldn't open connection to FICS!\n");
+        puts("ERROR: Couldn't open connection to FICS!");
         return;
     }
     else
-        printf("INFO: Connection to FICS was successful!\n");
+        puts("INFO: Connection to FICS was successful!");
+
+    puts("INFO: Authenticating with FICS using login_key.txt...");
+    authenticateClient(clientfd, serverfd);
 
     //
     // Code to deal with FICS <-> client back and forth
@@ -98,7 +160,7 @@ void doit(int clientfd)
     int numReadFromFICS = 0;
     int numReadFromClient = 0;
 
-    printf("INFO: Creating threads to route traffic between FICS and client...\n");
+    puts("INFO: Creating threads to route traffic between FICS and client...");
 
     pthread_t fromClientId;
     pthread_t fromFICSId;
@@ -109,7 +171,7 @@ void doit(int clientfd)
     // fromFICSId thread routes traffic from FICS to Client.
     // fromClientId thread routes traffic from Client to FICS.
     pthread_create(&fromFICSId, NULL, route_to, &FICSToClient);
-    pthread_create(&fromClientId, NULL, route_to, &clientToFICS);
+    pthread_create(&fromClientId, NULL, routeClientToFICS, &clientToFICS);
 
 //    pthread_join(fromFICSId, NULL);
     pthread_join(fromClientId, NULL);

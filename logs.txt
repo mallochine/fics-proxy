@@ -1,0 +1,39 @@
+INFO: setting SIGPIPE to SIG_IGN
+INFO: JARVIS is listening on port 5000...
+INFO: Preparing JARVIS to receive from the client
+INFO: Preparing JARVIS to receive from FICS
+INFO: Opening connection to FICS...
+INFO: Connection to FICS was successful!
+INFO: Authenticating with FICS using login_key.txt...
+INFO: Flushing out the initial key that the client sends...
+INFO: Giving login_key.txt to FICS...
+€q€€€€ÍÅrÄ‚ Ò›Ä²Ñ¬Ä²©“¼ˆ¦Ù»q·v”¨™Ù´¿£¸ºqÖ£³€
+INFO: Finished authenticating with FICS!
+INFO: Creating threads to route traffic between FICS and client...
+INFO: route_to was called
+INFO: fromfd is 4
+INFO: tofd is 5
+INFO: route_to was called
+INFO: fromfd is 5
+INFO: tofd is 4
+Õg·~¬¸y³vÍf­
+„ —¼}Ürq„ ª°›
+Œ¶×³k™o·w«}Ó 
+±Ô¡Ö§²´Ÿİ•
+£‚t¡h €`qrg´­¾¨hƒŠÂİrsİ|Êq}™§§n¾pÙ¬
+·v¤¡au¬ªÆ»€§qsˆ¨d£Õt¥v¶ƒ
+¦‚f¡`¼›y}q³gµnÉeyÔĞ»ÆºÍ¬
+rsan¼¥¡¢°f×tk°µÔuh¢‘uÚ¼
+«¬`¶¼º¹°¨´ aj¾“´„•İÅ³–r
+Æl­¥`x~u´y•ÜÑšxÇÏ¸{Èyµ˜€
+k½}`br´dh~©ºÆÚ»Æpq¤ˆÔ¯°
+d~´­–›Ã¬¶ÀÒr”q¥«ßa¡†
+y›İz²dx`Öw³dÊÁm”nŠœ¶dÉ£y¥
+n~yqe³v¹²ug“©d˜Ò«°¿—Å~
+u³§’Œ“i­s§§ÀqÕrÉ£º¾œÙŸ­ˆ
+hauylvi`p|­dkË¹ºrŞÊ´­­‚›
+ˆ³m´s~`§yd¼d†½Ä·¬£zÜ”£n¹”
+ÔeË{³¦¸Õ¿l¶Ñ—
+INFO: exiting route_to...
+INFO: exiting doit
+INFO: JARVIS is listening on port 5000...
